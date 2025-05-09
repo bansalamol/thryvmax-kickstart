@@ -419,7 +419,6 @@ export default function PermissionsPage() {
                                     />
                                 </PaginationItem>
 
-                                {/* Page Links with Ellipsis */}
                                 {(() => {
                                     const pageLinks = [];
                                     const totalPages = permissions.last_page;
