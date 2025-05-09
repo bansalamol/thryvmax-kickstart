@@ -1,8 +1,9 @@
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { useEffect, useState } from 'react';
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
+import { toast } from 'sonner';
 
 type Permission = {
     id: number;
@@ -19,7 +20,7 @@ type Props = {
 };
 
 export default function RolesPermissions({ role, permissions, rolePermissions }: Props) {
-    const { data, setData, put, processing } = useForm({
+    const { data, setData, put } = useForm({
         permission: rolePermissions.map(id =>
             permissions.find(p => p.id === id)?.name
         ).filter(Boolean) as string[],
@@ -31,24 +32,30 @@ export default function RolesPermissions({ role, permissions, rolePermissions }:
         setCheckAll(data.permission.length === permissions.length);
     }, [data.permission, permissions]);
 
-    const handleCheckAll = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const checked = e.target.checked;
+    const handleCheckAll = (checked: boolean) => {
         setCheckAll(checked);
         setData('permission', checked ? permissions.map(p => p.name) : []);
     };
 
-    const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        if (e.target.checked) {
-            setData('permission', [...data.permission, value]);
+    const handleCheckboxChange = (checked: boolean, name: string) => {
+        if (checked) {
+            setData('permission', [...data.permission, name]);
         } else {
-            setData('permission', data.permission.filter(p => p !== value));
+            setData('permission', data.permission.filter(p => p !== name));
         }
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        put(`/roles/${role.id}/give-permissions`);
+        put(`/roles/${role.id}/give-permissions`,{
+            onSuccess: () => {
+                toast.success('Permission Assigned to Role Successfully');
+                router.reload();
+            },
+            onError: () => {
+                toast.error('Failed to Assigned Permission to Role Successfully');
+            },
+        });
     };
 
     return (
@@ -78,7 +85,7 @@ export default function RolesPermissions({ role, permissions, rolePermissions }:
                                     <Checkbox
                                         id="checkAll"
                                         checked={checkAll}
-                                        onCheckedChange={(val) => handleCheckAll({ target: { checked: val as boolean } } as any)}
+                                        onCheckedChange={(val) => handleCheckAll(val as boolean)}
                                     />
 
                                     <label htmlFor="checkAll" className="text-gray-700 font-semibold ml-2">
@@ -105,7 +112,7 @@ export default function RolesPermissions({ role, permissions, rolePermissions }:
                                                                     id={`perm-${p.id}`}
                                                                     value={p.name}
                                                                     checked={data.permission.includes(p.name)}
-                                                                    onCheckedChange={(val) => handleCheckboxChange({ target: { checked: val, value: p.name } } as any)}
+                                                                    onCheckedChange={(val) => handleCheckboxChange(val as boolean, p.name)}
                                                                 />
                                                                 <label className="text-gray-700 ml-2">{p.name}</label>
                                                             </div>
