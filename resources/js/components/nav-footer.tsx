@@ -63,7 +63,6 @@ export function NavFooter({
                                 className={`h-4 w-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
                             />
                         </SidebarMenuButton>
-
                         {isOpen && (
                             <div className="ml-6 mt-1 space-y-1">
                                 {/* Dynamically render submenu items based on permissions */}
