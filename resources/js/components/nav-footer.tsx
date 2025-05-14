@@ -64,7 +64,6 @@ export function NavFooter({
                             />
                         </SidebarMenuButton>
 
-                        {/* Submenu for Setup */}
                         {isOpen && (
                             <div className="ml-6 mt-1 space-y-1">
                                 {/* Dynamically render submenu items based on permissions */}
