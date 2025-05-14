@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { LayoutGrid, ListFilterPlus, Settings2, Users } from 'lucide-react';
+import { LayoutGrid } from 'lucide-react';
 import AppLogo from './app-logo';
 
 
@@ -25,22 +25,6 @@ export function AppSidebar() {
             href: '/dashboard',
             icon: LayoutGrid,
         },
-        ...(can.viewRole ? [{
-            title: 'Roles',
-            href: '/roles',
-            icon: ListFilterPlus,
-        }] : []),
-        ...(can.viewPermission ? [{
-            title: 'Permissions',
-            href: '/permissions',
-            icon: Settings2,
-        }] : []),
-        ...(can.viewUser ? [{
-            title: 'Users',
-            href: '/users',
-            icon: Users,
-        }] : []),
-
     ];
 
     const footerNavItems: NavItem[] = [
@@ -74,7 +58,7 @@ export function AppSidebar() {
             </SidebarContent>
 
             <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
+                <NavFooter items={footerNavItems} className="mt-auto" can={can}/>
                 <NavUser />
             </SidebarFooter>
         </Sidebar>
